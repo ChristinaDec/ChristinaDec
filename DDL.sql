@@ -17,7 +17,7 @@ CREATE OR REPLACE TABLE Customers (
     cust_birthday date,
     cust_established datetime NOT NULL,
     total_expenditures decimal(8,2) default 0.00,
-    PRIMARY KEY (id_customer)
+    PRIMARY KEY (id_customer),
     CONSTRAINT customer_details UNIQUE (cust_fname, cust_lname, cust_email)
 );
 
@@ -25,7 +25,7 @@ CREATE OR REPLACE TABLE Discount_Codes (
     id_discount_code int(3) AUTO_INCREMENT NOT NULL UNIQUE,
     discount_percent decimal(3,2),
     discount_description varchar(30),
-    PRIMARY KEY (id_discount_code)
+    PRIMARY KEY (id_discount_code),
     CONSTRAINT discount_details UNIQUE (discount_percent, discount_description)
 );
 
@@ -45,7 +45,7 @@ CREATE OR REPLACE TABLE Albums (
     id_album int AUTO_INCREMENT NOT NULL UNIQUE,
     album_title varchar(50) NOT NULL,
     album_year varchar(4) NOT NULL,
-    PRIMARY KEY (id_album)
+    PRIMARY KEY (id_album),
     CONSTRAINT album_details UNIQUE (album_title, album_year)
 );
 
@@ -61,7 +61,7 @@ CREATE OR REPLACE TABLE Songs (
     REFERENCES Artists(id_artist) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (album)
     REFERENCES Albums(id_album) ON DELETE RESTRICT ON UPDATE CASCADE,
-    PRIMARY KEY (id_song)
+    PRIMARY KEY (id_song),
     CONSTRAINT song_details UNIQUE (title, artist, album)
 );
 
@@ -78,7 +78,7 @@ CREATE OR REPLACE TABLE Customers_Songs_Sales (
     REFERENCES Songs(id_song) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (discount)
     REFERENCES Discount_Codes(id_discount_code) ON DELETE RESTRICT ON UPDATE CASCADE,
-    PRIMARY KEY (id_sale)
+    PRIMARY KEY (id_sale),
     CONSTRAINT sale_details UNIQUE (customer, song, sale_completed)
 );
 
@@ -146,25 +146,25 @@ UPDATE Customers
 SET total_expenditures = total_expenditures + (SELECT sale_expenditure FROM Customers_Songs_Sales WHERE id_sale = 1)
 WHERE id_customer = 2;
 
-INSERT INTO Customers_Songs_Sales (id_customer, id_song, id_discount_code, sale_completed, sale_expenditure)
+INSERT INTO Customers_Songs_Sales (customer, song, discount, sale_completed, sale_expenditure)
 VALUES (2, 4, 2, 20241117000811, ((SELECT song_price FROM Songs WHERE id_song = 4) * (1-(SELECT discount_percent FROM Discount_Codes WHERE id_discount_code = 2))));
 UPDATE Customers 
 SET total_expenditures = total_expenditures + (SELECT sale_expenditure FROM Customers_Songs_Sales WHERE id_sale = 2)
 WHERE id_customer = 2;
 
-INSERT INTO Customers_Songs_Sales (id_customer, id_song, id_discount_code, sale_completed, sale_expenditure)
+INSERT INTO Customers_Songs_Sales (customer, song, discount, sale_completed, sale_expenditure)
 VALUES (5, 2, 5, 20240523000305, ((SELECT song_price FROM Songs WHERE id_song = 2) * (1-(SELECT discount_percent FROM Discount_Codes WHERE id_discount_code = 5))));
 UPDATE Customers 
 SET total_expenditures = total_expenditures + (SELECT sale_expenditure FROM Customers_Songs_Sales WHERE id_sale = 3)
 WHERE id_customer = 5;
 
-INSERT INTO Customers_Songs_Sales (id_customer, id_song, id_discount_code, sale_completed, sale_expenditure)
+INSERT INTO Customers_Songs_Sales (customer, song, discount, sale_completed, sale_expenditure)
 VALUES (1, 5, 3, 20240813000920, ((SELECT song_price FROM Songs WHERE id_song = 5) * (1-(SELECT discount_percent FROM Discount_Codes WHERE id_discount_code = 3))));
 UPDATE Customers 
 SET total_expenditures = (total_expenditures + (SELECT sale_expenditure FROM Customers_Songs_Sales WHERE id_sale = 4))
 WHERE id_customer = 1;
 
-INSERT INTO Customers_Songs_Sales (id_customer, id_song, id_discount_code, sale_completed, sale_expenditure)
+INSERT INTO Customers_Songs_Sales (customer, song, discount, sale_completed, sale_expenditure)
 VALUES (3, 5, 3, 20240608000917, ((SELECT song_price FROM Songs WHERE id_song = 5) * (1-(SELECT discount_percent FROM Discount_Codes WHERE id_discount_code = 3))));
 UPDATE Customers 
 SET total_expenditures = (total_expenditures + (SELECT sale_expenditure FROM Customers_Songs_Sales WHERE id_sale = 5))
