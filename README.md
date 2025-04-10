@@ -1,4 +1,4 @@
-## Hi there, I'm Chanda Decker and this is my github space. 👋
+
 
 <!--
 **ChristinaDec/ChristinaDec** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
